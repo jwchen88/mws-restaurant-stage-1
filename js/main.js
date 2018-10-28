@@ -178,7 +178,11 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
-  more.tabIndex = "3";
+  more.setAttribute(
+    "aria-label",
+    restaurant.name + "," + "restaurant.neighborhood"
+  );
+  more.tabIndex = "1";
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 
@@ -210,3 +214,11 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 } */
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker
+  .register('/sw.js')
+  .catch(function(err){
+    console.error(err);
+  })
+}
