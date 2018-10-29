@@ -22,6 +22,7 @@ const cacheAssets = [
   'js/restaurant_info.js'
 ];
 
+/* Install Service Worker */
 self.addEventListener('install', event => {
   console.log("Service Worker installed");
   event.waitUntil(
@@ -35,6 +36,7 @@ self.addEventListener('install', event => {
   );
 });
 
+/* activate Service Worker */
 self.addEventListener('activate', event => {
   console.log("Wervice Worker activated");
   event.waitUntil(
@@ -52,9 +54,20 @@ self.addEventListener('activate', event => {
   )
 })
 
+/* Fetch offline content */
 self.addEventListener('fetch', event => {
   console.log("Service Worker fetching"),
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
-  );
+    caches.match(event.request).then((response)=>{
+      if(response){
+        return response;
+      } else {
+        return fetch(event.request).then((response)=>{
+          return response;
+        }).catch((err)=>{
+          console.log("Fetching failed", err);
+        })
+      }
+    })
+  )
 })
